@@ -12,37 +12,53 @@ variable "prefix" {
 
 variable "int_subnets" {
   type        = map(string)
-  default     = {}
+  default     = {
+    "a" = "10.0.20.0/24"
+    "b" = "10.0.21.0/24"}
   description = "CIDR blocks for subnets"
 }
 
 variable "lb_subnets" {
   type        = map(string)
-  default     = {}
+  default     = {
+    "a" = "10.0.80.0/24"
+    "b" = "10.0.81.0/24"
+  }
   description = "CIDR blocks for subnets"
 }
 
 variable "vpn_subnets" {
   type        = map(string)
-  default     = {}
+  default     = {
+    "a" = "10.0.90.0/24"
+    "b" = "10.0.91.0/24"
+  }
   description = "CIDR blocks for subnets"
 }
 
 variable "eks_subnets" {
   type        = map(string)
-  default     = {}
+  default     = {
+    "a" = "10.0.30.0/24"
+    "b" = "10.0.31.0/24"
+  }
   description = "CIDR blocks for subnets"
 }
 
 variable "dbs_subnets" {
   type        = map(string)
-  default     = {}
+  default     = {
+    "a" = "10.0.10.0/24"
+    "b" = "10.0.11.0/24"
+  }
   description = "CIDR blocks for subnets"
 }
 
 variable "pub_subnets" {
   type        = map(string)
-  default     = {}
+  default     = {
+    "a" = "10.0.101.0/24"
+    "b" = "10.0.102.0/24"}
   description = "CIDR blocks for subnets"
 }
 
@@ -103,3 +119,8 @@ variable "enable_dns_support" {
   description = "Enable/disable DNS Support in the VPC"
 }
 
+variable "custom_eips_for_nat" {
+  type        = map(string)
+  default     = {}
+  description = "Pass custom EIPs if you have some already, otherwise they will be created by the module"
+}
