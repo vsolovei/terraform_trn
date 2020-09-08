@@ -7,6 +7,16 @@ resource "aws_eip" "default" {
   })
 }
 
+resource "aws_internet_gateway" "default" {
+  count = local.create_if_public_subnets_exist
+
+  vpc_id = aws_vpc.default.id
+
+  tags = merge(var.tags, {
+    Name = "${var.prefix}-igw"
+  })
+}
+
 resource "aws_nat_gateway" "default" {
   depends_on = [aws_internet_gateway.default]
 
@@ -16,16 +26,6 @@ resource "aws_nat_gateway" "default" {
   allocation_id = length(var.custom_eips_for_nat) == 0 ? aws_eip.default[each.key].id : var.custom_eips_for_nat[each.key]
 
   tags = merge(var.tags, {
-    Name = "${var.prefix}-nat-${each.key}"
-  })
-}
-
-resource "aws_internet_gateway" "default" {
-  count = local.create_if_public_subnets_exist
-
-  vpc_id = aws_vpc.default.id
-
-  tags = merge(var.tags, {
-    Name = "${var.prefix}-igw"
+    Name = "${var.prefix}-public_nat-${each.key}"
   })
 }

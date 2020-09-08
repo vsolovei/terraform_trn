@@ -4,9 +4,8 @@ module "ekscluster" {
 
   cluster_name = local.eks_name
   cluster_version  = "1.16"
-#  subnets          = module.vpc.public_subnets
-  subnets          = module.vpc.aws_subnet.subnets_eks
-  vpc_id           = module.vpc.vpc_id
+  subnets          = values(aws_subnet.eks)[*].id
+  vpc_id           = aws_vpc.default.id
   write_kubeconfig = false
   manage_aws_auth  = true
 
@@ -20,12 +19,11 @@ module "ekscluster" {
 
   node_groups = {
     default = {
-      name             = "${local.prefix}-eks-nodes"
+      name             = "${var.prefix}-eks-nodes"
       desired_capacity = 2
       max_capacity     = 6
       min_capacity     = 2
-      instance_type    = "m5.large"
-      subnets          = local.eks
+      instance_type    = "t3.large"
     }
   }
 
@@ -43,7 +41,7 @@ resource "aws_security_group_rule" "cluster-ingress-managed-nodes" {
 }
 
 resource "aws_iam_policy" "cloudwatch-access" {
-  name   = "${local.prefix}-allow-push-to-cloudwatch"
+  name   = "${var.prefix}-allow-push-to-cloudwatch"
   policy = <<EOF
 {
     "Version": "2012-10-17",
